@@ -53,13 +53,11 @@ const DrinkListScreen = ({ navigation }) => {
       })
   };
 
-
-
-
+  // Visualização. Mostra somente se existirem drinks cadastrados
   return (
     <View style={styles.container}>
       {drinks.length === 0 ? (
-        <Text style={styles.emptyText}>Nenhum drink encontrado.</Text>
+        <Text style={styles.emptyText}>Nenhum drink cadastrado.</Text>
       ) : (
         <View>
           <Text style={styles.tituloLista}>Clique no drink a ser excluído</Text>
@@ -76,10 +74,12 @@ const DrinkListScreen = ({ navigation }) => {
           />
         </View>
       )}
+    <Button title="Voltar" onPress={() => navigation.goBack()} />
     </View>
   );
 };
 
+// estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,

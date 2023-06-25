@@ -51,17 +51,18 @@ const UserScreen = ({ navigation }) => {
     fetchDrinks();
   }, []);
 
+  // Logout do sistema. Remove o token do AsyncStorage e direcina para a tela de login
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('token');
-      // Redirecionar para a tela de login ou outra tela desejada
-      navigation.navigate('LoginScreen');
+      navigation.navigate('Login');
       Alert.alert('Logout', 'Você saiu do sistema');
     } catch (error) {
       console.log('Erro ao fazer logout:', error);
     }
   };
 
+  // Direciona para a tela de edição de drink
   const handleEditDrink = (id) => {
     navigation.navigate('Editar drink', { id });
   };
@@ -78,6 +79,7 @@ const UserScreen = ({ navigation }) => {
     );
   };
 
+  // Visualização
   return (
     <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 16 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
@@ -103,6 +105,7 @@ const UserScreen = ({ navigation }) => {
   );
 };
 
+// Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -113,6 +116,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+
 });
 
 export default UserScreen;

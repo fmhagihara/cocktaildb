@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet } from 'react-native';
 import { insertDrink, getExistingDrinks } from './database';
 
 const SearchScreen = ({ navigation }) => {
@@ -8,7 +8,7 @@ const SearchScreen = ({ navigation }) => {
     const [selectedDrinks, setSelectedDrinks] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
 
-
+    // Realiza a busca na API
     const handleSearch = () => {
         fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchKeyword}`)
             .then(response => response.json())
@@ -23,6 +23,7 @@ const SearchScreen = ({ navigation }) => {
 
     };
 
+    // Para marcar/desmarcar os drinks listados (simula um checkbox)
     const handleToggleSelect = (drinkId) => {
         if (selectedDrinks.includes(drinkId)) {
             setSelectedDrinks(selectedDrinks.filter((id) => id !== drinkId));
@@ -31,6 +32,7 @@ const SearchScreen = ({ navigation }) => {
         }
     };
 
+    // Adicionar os drinks selecionados no BD
     const handleAddSelected = async () => {
         try {
             const selectedIds = searchResults
@@ -51,9 +53,11 @@ const SearchScreen = ({ navigation }) => {
 
             await Promise.all(insertPromises);
 
+            // Desmarca os drinks
             setSelectedDrinks([]);
             setSelectAll(false);
 
+            // Mostra a quantidade de drinks adicionados
             if (successInserts > 0) {
                 Alert.alert('Inserção Concluída', `Foram inseridos ${successInserts} registros no BD`);
             }
@@ -64,6 +68,7 @@ const SearchScreen = ({ navigation }) => {
 
     };
 
+    // Antes de realizar a busca, verifica se a palavra-chave tem pelo menos 3 caracteres
     const handleSearchButton = () => {
         if (searchKeyword.length < 3) {
             Alert.alert('Erro', 'A palavra-chave deve ter pelo menos 3 caracteres.');
@@ -73,8 +78,10 @@ const SearchScreen = ({ navigation }) => {
         handleSearch();
     };
 
+    // Visualização
     return (
-        <View>
+        <View style={styles.container}>
+            <Text style={styles.tituloLista}>Realize uma busca e adicione os itens</Text>
             <Text>Palavra-chave:</Text>
             <TextInput value={searchKeyword} onChangeText={setSearchKeyword} />
             <Button title="Buscar" onPress={handleSearchButton} />
@@ -106,11 +113,46 @@ const SearchScreen = ({ navigation }) => {
                     <Text>{item.strDrink}</Text>
                 </TouchableOpacity>
             ))}
+            {searchResults.length > 0 && (
+                <>
+                    <Button title="Adicionar" onPress={handleAddSelected} />
+                </>
+            )}
 
-            <Button title="Adicionar" onPress={handleAddSelected} />
+            <Text>{'\n'}</Text>
             <Button title="Voltar" onPress={() => navigation.goBack()} />
         </View>
     );
 };
+
+// Estilos
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingHorizontal: 16,
+        paddingVertical: 24,
+    },
+    emptyText: {
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    tituloLista: {
+        fontSize: 16,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        paddingBottom: 10,
+        color: '#0000FF',
+    },
+    itemContainer: {
+        backgroundColor: '#e6e6e6',
+        padding: 8,
+        marginBottom: 8,
+        borderRadius: 8,
+    },
+    itemText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+});
 
 export default SearchScreen;

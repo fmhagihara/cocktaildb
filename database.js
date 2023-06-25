@@ -1,9 +1,9 @@
 import * as SQLite from 'expo-sqlite';
 
-// Abra ou crie o banco de dados SQLite
+// Abrir/criar o banco de dados SQLite
 const db = SQLite.openDatabase('meubanco.db');
 
-// Crie a tabela "users" se ainda não existir
+// Cria a tabela "users" se ainda não existir
 export const createTable = () => {
     db.transaction(tx => {
         tx.executeSql(
@@ -16,7 +16,7 @@ export const createTable = () => {
 };
 
 
-// Insira um usuário de exemplo
+// Insere usuários iniciais
 export const insertUser = () => {
     db.transaction(tx => {
         tx.executeSql(
@@ -28,7 +28,7 @@ export const insertUser = () => {
     });
 };
 
-
+// Busca usuário por username (login)
 export const getUserByUsername = (username, callback) => {
     db.transaction(tx => {
         tx.executeSql(
@@ -50,6 +50,8 @@ export const getUserByUsername = (username, callback) => {
     });
 };
 
+
+// Cria a tabela de drinks, se já não existir
 const createTableDrinks = () => {
     db.transaction(tx => {
         tx.executeSql(
@@ -65,7 +67,7 @@ const createTableDrinks = () => {
     });
 };
 
-
+// Limpa a tabela de drinks. Usada somente no ambiente de desenvolvimento
 export const truncateTableDrinks = () => {
     db.transaction(tx => {
         tx.executeSql(
@@ -81,7 +83,7 @@ export const truncateTableDrinks = () => {
     });
 };
 
-
+// Insere drink
 export const insertDrink = (idDrink, strDrink, strCategory, strAlcoholic, strGlass) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
@@ -99,7 +101,7 @@ export const insertDrink = (idDrink, strDrink, strCategory, strAlcoholic, strGla
     });
 };
 
-
+// Exclui drink
 export const removeDrink = (id) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
@@ -123,8 +125,7 @@ export const removeDrink = (id) => {
     });
 };
 
-
-
+// Listar drinks
 export const listDrinks = () => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
@@ -149,7 +150,7 @@ export const listDrinks = () => {
     });
 };
 
-
+// Busca drink pelo ID
 export const getDrinkById = (id) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
@@ -173,6 +174,7 @@ export const getDrinkById = (id) => {
     });
 };
 
+// Atualiza drink
 export const saveDrink = (idDrink, strDrink, strCategory, strAlcoholic, strGlass) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
@@ -194,10 +196,9 @@ export const saveDrink = (idDrink, strDrink, strCategory, strAlcoholic, strGlass
     });
 };
 
-
-
 export default db;
 
+// Chamado no início do programa. Cria as tabelas e insere os usuários iniciais
 export const initDatabase = () => {
     createTable();
     insertUser();

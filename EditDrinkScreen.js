@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { getDrinkById, saveDrink } from './database';
 
-const EditDrink = ({ route }) => {
+const EditDrink = ({ route, navigation }) => {
     const [drink, setDrink] = useState(null);
 
     useEffect(() => {
@@ -37,6 +37,7 @@ const EditDrink = ({ route }) => {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.tituloLista}>Editar drink</Text>
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Nome:</Text>
                 <TextInput
@@ -72,6 +73,8 @@ const EditDrink = ({ route }) => {
             <TouchableOpacity style={styles.button} onPress={handleSave}>
                 <Text style={styles.buttonText}>Salvar</Text>
             </TouchableOpacity>
+            <Text>{'\n'}</Text>
+            <Button title="Voltar" onPress={() => navigation.goBack()} />
         </View>
 
     );
@@ -106,6 +109,13 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         fontWeight: 'bold',
+    },
+    tituloLista: {
+        fontSize: 16,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        paddingBottom: 10,
+        color: '#0000FF',
     },
 });
 

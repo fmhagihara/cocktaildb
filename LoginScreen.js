@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
-import { getUserByUsername, initDatabase } from './database';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Alert, StyleSheet, Image } from 'react-native';
+import { getUserByUsername } from './database';
 import JWT from 'expo-jwt';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -12,6 +12,7 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = () => {
 
     verifyUser();
+
     if (!username || !password) {
       Alert.alert('Aviso', 'Digite usuário e senha!');
     }
@@ -23,16 +24,15 @@ const LoginScreen = ({ navigation }) => {
       }
 
       if (user.password === password) {
-        // Autenticação bem-sucedida
+        // Autenticação bem-sucedida. Codifica o usuário e salva no token, que ficará armazenado no AsyncStorage
         const key = 'teste';
         const token = JWT.encode(user, key);
 
         //console.log('Usuário autenticado com sucesso!')
         //console.log(token);
-        console.log(user);
+        //console.log(user);
 
         AsyncStorage.setItem('token', token);
-
 
         verifyUser();
       } else {
@@ -44,18 +44,19 @@ const LoginScreen = ({ navigation }) => {
     });
   };
 
+  // Verifica o usuário, direcionando para a tela inicial correta
   const verifyUser = async () => {
     try {
-      // Obtenha o token armazenado no AsyncStorage
+      // Obter o token armazenado no AsyncStorage
       const token = await AsyncStorage.getItem('token');
 
       if (token) {
-        const key = 'teste'; // Substitua pela sua chave secreta
+        const key = 'teste';
 
         // Decode o token JWT para obter as informações do usuário
         const decodedToken = JWT.decode(token, key);
 
-        // Verifique o tipo de usuário
+        // Verifica o tipo de usuário
         const userType = decodedToken.role === 'admin' ? 'admin' : 'user';
 
         // Redirecione para a tela correta com base no tipo de usuário usando o navigation
@@ -67,33 +68,80 @@ const LoginScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.log('Erro ao verificar o token:', error);
-      // Lógica de tratamento de erro, se necessário
     }
   };
 
-
+  // Visualização
   return (
-    <View>
-      <Text>Username:</Text>
-      <TextInput
-        value={username}
-        onChangeText={ text => {
-          if (typeof text === 'string') {
-            setUsername(text.trim())
-          }
-        }}
-        placeholder="Username"
-      />
-      <Text>Password:</Text>
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Password"
-        secureTextEntry
-      />
-      <Button title="Login" onPress={handleLogin} />
+    <View style={styles.container}>
+      <Image source={require('./assets/logo_thecocktaildb.png')} style={styles.image} />
+
+      <View style={styles.form}>
+        <Text style={styles.label}>Username:</Text>
+        <TextInput
+          style={styles.input}
+          value={username}
+          onChangeText={text => {
+            if (typeof text === 'string') {
+              setUsername(text.trim())
+            }
+          }}
+          placeholder="Username"
+        />
+
+        <Text style={styles.label}>Password:</Text>
+        <TextInput
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Password"
+          secureTextEntry
+        />
+
+        <Button title="Login" onPress={handleLogin} />
+
+      </View>
+      <View>
+        <Text style = {styles.instrucoes} onPress={() => navigation.navigate('Instruções')}>Instruções</Text>
+        {'\n'}
+        <Text>Autor: Fernando Massaki Hagihara</Text>
+      </View>
     </View>
   );
 };
+
+// Estilos
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  image: {
+    width: 200,
+    height: 50,
+    resizeMode: 'contain',
+    marginBottom: 30,
+  },
+  form: {
+    width: '100%',
+  },
+  label: {
+    marginBottom: 8,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingHorizontal: 8,
+  },
+  instrucoes: {
+    marginTop: 30,
+    color: 'blue',
+    textDecorationLine: 'underline',
+  },
+});
 
 export default LoginScreen;
