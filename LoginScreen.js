@@ -103,8 +103,8 @@ const LoginScreen = ({ navigation }) => {
       </View>
       <View>
         <Text style = {styles.instrucoes} onPress={() => navigation.navigate('Instruções')}>Instruções</Text>
-        {'\n'}
-        <Text>Autor: Fernando Massaki Hagihara</Text>
+
+        <Text>{'\n'}Autor: Fernando Massaki Hagihara</Text>
       </View>
     </View>
   );

@@ -10,7 +10,7 @@ const Instructions = ({ navigation }) => {
                 <Text style={styles.texto}>
                     Este aplicativo é a segunda avaliação do conteúdo ministrado na disciplina DS151 -
                     Desenvolvimento para Dispositivos Móveis, curso de Tecnologia em Análise e
-                    Desenvolvimento de Sistemas da Universidade Federal do Paraná. professor
+                    Desenvolvimento de Sistemas da Universidade Federal do Paraná. Professor
                     Diego Addan Gonçalves.
                 </Text>
                 <Text style={styles.texto}>
